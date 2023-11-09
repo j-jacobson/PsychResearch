@@ -1,8 +1,14 @@
+#! /usr/bin/python3
+
 import os, sys, re
 import glob
 import pandas as pd
 
 def merge_csv_files(folder_path):
+    """ Merge the CSV files
+    param: folder_path: The path to the folder holding the .csv files.
+    returns: A pandas DataFrame holding all of the data. """
+    
     # Get a list of all CSV files in the folder
     csv_files = glob.glob(os.path.join(folder_path, '*.csv'))
 
@@ -84,7 +90,7 @@ def reorganize_columns(df):
 if __name__ == "__main__":
     # Check if the correct number of command-line arguments is provided
     if len(sys.argv) != 2:
-        print("Usage: python3 main.py <folder_path>")
+        print("Usage: python3 formatter.py <folder_path>")
         sys.exit(1)
 
     # Get folder path from command-line arguments
@@ -115,7 +121,6 @@ if __name__ == "__main__":
                          ]
 
     merged_data = remove_columns(merged_data, columns_to_remove)
-
 
     # Display the 2D table
     create_2d_table(merged_data)
