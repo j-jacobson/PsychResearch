@@ -11,59 +11,51 @@ def merge_csv_files(folder_path):
 
     # Merge all CSV files into one DataFrame
     for idx, file in enumerate(csv_files):
-        df = pd.read_csv(file)
+      df = pd.read_csv(file)
 
-        # Exclude the second row from each CSV file
-        if(idx != 0):
-          df = df.iloc[~(df.index == 0)]
+      # Exclude the second row from each CSV file after the first
+      if idx == 0:
+        merged_df = pd.concat([merged_df, df.iloc[:1]], ignore_index=True)
+      
+      df = df.iloc[1:]
 
-        # Define the regular expression pattern
-        pattern = r'(^\d{4})[_\s]'
-        # Extract value from the filename using regular expressions
-        match = re.search(pattern, os.path.basename(file))
-        if match:
-            df['ID'] = int(match.group(1))
+      # Define the regular expression pattern
+      pattern = r'(^\d+)[_\s]'
+      # Extract value from the filename using regular expressions
+      match = re.search(pattern, os.path.basename(file))
+      if match:
+        df['ID'] = match.group(1)
 
-        # Exclude rows based on a specific response in the 'ResponseColumn'
-        df = df.loc[df['Finished'] != 'False']
+      # Exclude rows based on a specific response in the 'ResponseColumn'
+      df = df.loc[df['Finished'] != 'False']
 
-        # Extract only the numeric part from columns not matching certain patterns
-        excluded_cases = ['RecordedDate', 'Duration (in seconds)', 'ID']
+      # Extract only the numeric part from columns not matching certain patterns
+      excluded_cases = ['RecordedDate', 'Duration (in seconds)', 'ID']
 
-        # Modify the regex pattern to exclude the specified cases
-        pattern = f'^(?!(?:{"|".join(re.escape(case) for case in excluded_cases)}))'
+      # Modify the regex pattern to exclude the specified cases
+      pattern = f'^(?!(?:{"|".join(re.escape(case) for case in excluded_cases)}))'
 
-        # Extract only the numeric part from columns matching the modified pattern
-        for col in df.filter(regex=pattern).columns:
-          temp = df[col].str.extract(r'(\d+)', expand=False)
-          print(temp)
-          # Check if the column contains numeric values
-          if temp.notnull().all():
-            df[col] = temp.astype(int)
-          else:
-            # Substitute text values with corresponding numbers
-            df[col].replace({'A great deal': 5,
-                            'A lot': 4,
-                            'Often': 4,
-                            'A fair amount': 3, 
-                            'Occasionally': 3,
-                            'A little': 2,
-                            'Once or twice': 2,
-                            'None': 1,
-                            'Not at all': 1
-                            }, inplace=True)
+      # Extract only the numeric part from columns matching the modified pattern
+      for col in df.filter(regex=pattern).columns:
+        temp = df[col].str.extract(r'(\d+)', expand=False)
+        # Check if the column contains numeric values
+        if temp.notnull().all():
+          df[col] = temp.astype(int)
+        else:
+          # Substitute text values with corresponding numbers
+          df[col].replace({'A great deal': 5,
+                           'A lot': 4,
+                           'Often': 4,
+                           'A fair amount': 3, 
+                           'Occasionally': 3,
+                           'A little': 2,
+                           'Once or twice': 2,
+                           'None': 1,
+                           'Not at all': 1
+                           }, inplace=True)
 
-        merged_df = pd.concat([merged_df, df], ignore_index=True)
-
+      merged_df = pd.concat([merged_df, df], ignore_index=True)
     return merged_df
-
-def calculate_custom_columns(df):
-    # Calculate custom columns (e.g., 'Q1*Q2' in this case)
-    for col in df.columns[1:]:  # Exclude the first column ('ID')
-        if col.startswith('Q'):
-            df[f'{col}*'] = df[col]
-
-    return df
 
 def remove_columns(df, columns_to_remove):
     # Remove specified columns
@@ -75,8 +67,8 @@ def create_2d_table(df, excel_filename='output/output.xlsx'):
     print(df)
 
     # Save the DataFrame to an Excel file with the 'xlsxwriter' engine
-    df.to_excel(excel_filename, index=False, engine='xlsxwriter')
-    print(f"Data saved to {excel_filename}")
+    #df.to_excel(excel_filename, index=False, engine='xlsxwriter')
+    #print(f"Data saved to {excel_filename}")
 
 def reorganize_columns(df):
   # Reorganize columns with ID first, followed by specific columns, Qs, ValueFromFilename, IsFirstFile, and then other columns
