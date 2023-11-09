@@ -67,8 +67,8 @@ def create_2d_table(df, excel_filename='output/output.xlsx'):
     print(df)
 
     # Save the DataFrame to an Excel file with the 'xlsxwriter' engine
-    #df.to_excel(excel_filename, index=False, engine='xlsxwriter')
-    #print(f"Data saved to {excel_filename}")
+    df.to_excel(excel_filename, index=False, engine='xlsxwriter')
+    print(f"Data saved to {excel_filename}")
 
 def reorganize_columns(df):
   # Reorganize columns with ID first, followed by specific columns, Qs, ValueFromFilename, IsFirstFile, and then other columns
