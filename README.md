@@ -36,7 +36,7 @@ Clone the repository and run the script using the following commands:
 ```bash
 git clone https://github.com/j-jacboson/PsychResearch.git
 cd PsychResearch
-python3 formatter.py /path/to/your/csv/files
+python3 main.py /path/to/your/csv/files
 ```
 
 ## Contributions
