@@ -3,6 +3,7 @@
 import os, sys, re
 import glob
 import pandas as pd
+import xlsxwriter
 
 def merge_csv_files(folder_path):
     """ Merge the CSV files
