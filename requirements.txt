@@ -2,3 +2,4 @@
 re
 glob
 pandas
+xlsxwriter
