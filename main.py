@@ -90,7 +90,7 @@ def reorganize_columns(df):
 if __name__ == "__main__":
     # Check if the correct number of command-line arguments is provided
     if len(sys.argv) != 2:
-        print("Usage: python3 formatter.py <folder_path>")
+        print("Usage: python3 main.py <folder_path>")
         sys.exit(1)
 
     # Get folder path from command-line arguments
